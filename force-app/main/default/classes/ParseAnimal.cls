@@ -3,7 +3,7 @@ public class ParseAnimal {
     public Animal animal;
     
     public class Animal {
-        public Integer id;
+        public Decimal id;
         public String name;
         public String eats;
         public String says;

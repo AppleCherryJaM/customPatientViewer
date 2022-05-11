@@ -24,15 +24,19 @@ public with sharing class AnimalTriggerHandler {
 
 
     public static ParseAnimal requestSend (Decimal id) {
-        Http http = new Http();
-        HttpRequest request = new HttpRequest();
-        request.setEndpoint('https://th-apex-http-callout.herokuapp.com/animals/' + id.toPlainString());
-        request.setMethod('GET');
-        HttpResponse response = http.send(request);
-        // If the request is successful, parse the JSON response.
-        if (response.getStatusCode() == 200) {       
-            // ParseAnimal animalParser = ParseAnimal.parseAnimal(response.getBody()); 
-            return (ParseAnimal) ParseAnimal.parseAnimal(response.getBody());
+        try {
+            Http http = new Http();
+            HttpRequest request = new HttpRequest();
+            request.setEndpoint('https://th-apex-http-callout.herokuapp.com/animals/' + id.toPlainString());
+            request.setMethod('GET');
+            HttpResponse response = http.send(request);
+            // If the request is successful, parse the JSON response.
+            if (response.getStatusCode() == 200) {       
+                // ParseAnimal animalParser = ParseAnimal.parseAnimal(response.getBody()); 
+                return (ParseAnimal) ParseAnimal.parseAnimal(response.getBody());
+            }
+        } catch (Exception e) {
+            System.debug(e.getCause());
         }
         return null;
     }
