@@ -13,11 +13,10 @@ private class AccountManagerTest {
             + objAccount.Id +'/contacts';
         request.httpMethod = 'GET';
         RestContext.request = request;
-        String expected = objAccount.Name;
         // Call the method to test
         Account thisAccount = AccountManager.getAccount();
         // Verify results
         System.assert(thisAccount!= null);
-        System.assertEquals(expected, thisAccount.Name);
+        System.assertEquals(objAccount.Name, thisAccount.Name);
     }
 }
