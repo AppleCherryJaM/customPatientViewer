@@ -1,9 +1,9 @@
 public with sharing class MaintenanceRequestHelper {
-    public static void updateworkOrders(List<Case> updWorkOrders, Map<Id,Case> nonUpdCaseMap) {
+    public static void updateworkOrders(List<Case> newItemsList, Map<Id,Case> oldItemsMap) {
         Set<Id> validIds = new Set<Id>();
         
-        for (Case c : updWorkOrders){
-            if (nonUpdCaseMap.get(c.Id).Status != 'Closed' && c.Status == 'Closed'){
+        for (Case c : newItemsList){
+            if (oldItemsMap.get(c.Id).Status != 'Closed' && c.Status == 'Closed'){
                 if (c.Type == 'Repair' || c.Type == 'Routine Maintenance'){
                     validIds.add(c.Id);
                 }
@@ -38,7 +38,7 @@ public with sharing class MaintenanceRequestHelper {
             for(Case cc : closedCasesM.values()){
                 Case nc = new Case (
                     ParentId = cc.Id,
-                Status = 'New',
+                    Status = 'New',
                     Subject = 'Routine Maintenance',
                     Type = 'Routine Maintenance',
                     Vehicle__c = cc.Vehicle__c,
