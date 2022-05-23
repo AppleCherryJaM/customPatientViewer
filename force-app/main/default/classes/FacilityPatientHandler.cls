@@ -44,7 +44,6 @@ global with sharing class FacilityPatientHandler {
 
 	private static void updatePatient(List<Patient> patientList, List<Patient__c> currentPatientList, Map<String, Facility__c> facilityMap) {
 		List<Patient__c> customPatientList = new List<Patient__c>();
-		System.debug('Method start!');
 		for (Patient p : patientList) {
 			for (Integer i = 0; i < currentPatientList.size(); i++) {
 				if (p.patientId != currentPatientList[i].patient_id__c) continue;
@@ -60,8 +59,6 @@ global with sharing class FacilityPatientHandler {
 				if (p.lastName != currentPatientList[i].last_Name__c) {
 					currentPatientList[i].last_Name__c = p.lastName;
 				}
-				System.debug('New: ' + p);
-				System.debug('Old: ' + currentPatientList[i]);
 				customPatientList.add(currentPatientList[i]);
 			}
 		}
