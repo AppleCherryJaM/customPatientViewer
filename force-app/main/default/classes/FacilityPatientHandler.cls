@@ -42,24 +42,24 @@ global with sharing class FacilityPatientHandler {
 		insert insertedFacilityList;
 	}
 
-	private static void updatePatient(List<Patient> patientList, List<Patient__c> currentPatientList, Map<String, Facility__c> facilityMap) {
+	private static void updatePatient(List<Patient> patientList, Map<String, Patient__c> currentPatientList, Map<String, Facility__c> facilityMap) {
 		List<Patient__c> customPatientList = new List<Patient__c>();
 		for (Patient p : patientList) {
-			for (Integer i = 0; i < currentPatientList.size(); i++) {
-				if (p.patientId != currentPatientList[i].patient_id__c) continue;
-				
-				if (facilityMap.get(p.facilityId).id != currentPatientList[i].facility__c) {
-					currentPatientList[i].facility__c = facilityMap.get(p.facilityId).id;
+			if (currentPatientList.containsKey(p.patientId)) {
+				Patient__c bufferObj = currentPatientList.get(p.patientId);
+
+				if (facilityMap.get(p.facilityId).id != bufferObj.facility__c) {
+					bufferObj.facility__c = facilityMap.get(p.facilityId).id;
+				}
+
+				if (p.firstName != bufferObj.first_Name__c) {
+					bufferObj.first_Name__c = p.firstName;
 				}
 				
-				if (p.firstName != currentPatientList[i].first_Name__c) {
-					currentPatientList[i].first_Name__c = p.firstName;
+				if (p.lastName != bufferObj.last_Name__c) {
+					bufferObj.last_Name__c = p.lastName;
 				}
-				
-				if (p.lastName != currentPatientList[i].last_Name__c) {
-					currentPatientList[i].last_Name__c = p.lastName;
-				}
-				customPatientList.add(currentPatientList[i]);
+				customPatientList.add(bufferObj);
 			}
 		}
 		update customPatientList;
@@ -79,11 +79,15 @@ global with sharing class FacilityPatientHandler {
 
 			System.debug(patientsId);
 			List<Patient__c> currentPatientList = [SELECT first_name__c, last_name__c, patient_id__c, facility__c FROM Patient__c WHERE patient_id__c IN :patientsId];
+			Map<String, Patient__c> currentPatientMap = new Map<String, Patient__c>();
+			for (Patient__c p : currentPatientList) {
+				currentPatientMap.put(p.patient_id__c, p);
+			}
 
 			List<Patient__c> insertedPatientList = new List<Patient__c>();
 			Map<String, Facility__c> facilityMap = new Map<String, Facility__c>();
 
-				//create and add into idList values
+			//create and add into idList values
 			List<String> idList = new List<String>();
 			for (Patient p : patientList) {
 				idList.add(p.facilityId);
@@ -97,14 +101,12 @@ global with sharing class FacilityPatientHandler {
 
 			//update section
 			if (!currentPatientList.isEmpty()) {
-				updatePatient(patientList, currentPatientList, facilityMap);
+				updatePatient(patientList, currentPatientMap, facilityMap);
 			}
 
 			for (Integer i = 0; i < patientList.size(); i++) {
-				for (Integer j = 0; j < currentPatientList.size(); j++) {
-					if (patientList[i].patientId == currentPatientList[j].Patient_Id__c) {
-						patientList.remove(i);
-					}
+				if (currentPatientMap.containsKey(patientList[i].patientId)) {
+					patientList.remove(i);
 				}
 			}
 
