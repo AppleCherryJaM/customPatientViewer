@@ -10,10 +10,6 @@ global with sharing class FacilityPatientHandler {
       public String patientId;
 			public String facilityId; 
   }
-	
-	private static Facility__c getFacilityById(String facilityId) {
-		return [SELECT Clinic_Name__c, Name, FacilityNumber__c FROM Facility__c WHERE FacilityNumber__c = :facilityId];
-	}
 
 	private static String stringGenerator() {
 		Integer randomNumber = Integer.valueOf((Math.random() * 100));
