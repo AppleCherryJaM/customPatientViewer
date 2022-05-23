@@ -11,7 +11,7 @@ global with sharing class FacilityPatientHandler {
 			public String facilityId; 
   }
 
-		private static Facility__c getFacilityById(String facilityId) {
+	private static Facility__c getFacilityById(String facilityId) {
 		return [SELECT Clinic_Name__c, Name, FacilityNumber__c FROM Facility__c WHERE FacilityNumber__c = :facilityId];
 	}
 
@@ -22,12 +22,12 @@ global with sharing class FacilityPatientHandler {
 		alphabet.add('b');
 		alphabet.add('c');
 		alphabet.add('d');
-		alphabet.add('e').
+		alphabet.add('e');
 		alphabet.add('f');
 		alphabet.add('g');
 		alphabet.add('h');
 		//дальше мне лень
-		String generatedFacilityNumber = '';
+		String generatedFacilityNumber = '@';
 
 		for (Integer i = 0; i < alphabet.size(); i++) {
 			generatedFacilityNumber += alphabet[Integer.valueOf((Math.random() * (alphabet.size() - 1)))];
