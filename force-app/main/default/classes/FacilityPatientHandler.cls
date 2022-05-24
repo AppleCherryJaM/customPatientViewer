@@ -1,6 +1,5 @@
 @RestResource(urlMapping='/patients/*')
 global with sharing class FacilityPatientHandler {
-	private final static String ENDPOINT = '';
 	
 	public static List<Patient> patientList;
 
@@ -11,62 +10,8 @@ global with sharing class FacilityPatientHandler {
 			public String facilityId; 
   }
 
-	private static String stringGenerator() {
-		Integer randomNumber = Integer.valueOf((Math.random() * 100));
-		List<String> alphabet = new List<String>{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
-		String generatedFacilityNumber;
-
-		for (Integer i = 0; i < alphabet.size(); i++) {
-			generatedFacilityNumber += alphabet[Integer.valueOf((Math.random() * (alphabet.size() - 1)))];
-		}
-		return generatedFacilityNumber + ' ' + Integer.valueOf((Math.random() * 100));
-	}
-
-	private static void insertFacility(List<Patient> patientList, List<Facility__c> facilityList) {
-		Map<String, Facility__c> facilityMap = new Map<String, Facility__c>();
-		List<Facility__c> insertedFacilityList = new List<Facility__c>(); 
-
-		for (Facility__c f : facilityList) {
-				facilityMap.put(f.FacilityNumber__c, f);
-		}
-
-		for (Patient p : patientList) {
-			if (!facilityMap.containsKey(p.facilityId)) {
-				Facility__c f = new Facility__c (
-		 			Clinic_name__c = 'Some clinic name',
-					FacilityNumber__c = p.facilityId
-				);
-				insertedFacilityList.add(f);
-			}
-		}
-		insert insertedFacilityList;
-	}
-
-	private static void updatePatient(List<Patient> patientList, Map<String, Patient__c> currentPatientList, Map<String, Facility__c> facilityMap) {
-		List<Patient__c> customPatientList = new List<Patient__c>();
-		for (Patient p : patientList) {
-			if (currentPatientList.containsKey(p.patientId)) {
-				Patient__c bufferObj = currentPatientList.get(p.patientId);
-
-				if (facilityMap.get(p.facilityId).id != bufferObj.facility__c) {
-					bufferObj.facility__c = facilityMap.get(p.facilityId).id;
-				}
-
-				if (p.firstName != bufferObj.first_Name__c) {
-					bufferObj.first_Name__c = p.firstName;
-				}
-				
-				if (p.lastName != bufferObj.last_Name__c) {
-					bufferObj.last_Name__c = p.lastName;
-				}
-				customPatientList.add(bufferObj);
-			}
-		}
-		update customPatientList;
-	}
-
 	@HttpPost
-	global static void httpPost() {
+	global static String httpPost() {
 		String restRequestBody;
 		try {
 			RestRequest restRequest = RestContext.request;
@@ -109,8 +54,14 @@ global with sharing class FacilityPatientHandler {
 					patientList.remove(i);
 				}
 			}
-
+			
 			insertFacility(patientList, facilityListById);
+			
+			facilityListById = [SELECT id, name, Clinic_name__c, FacilityNumber__c FROM Facility__c WHERE FacilityNumber__c = :idList];
+			Map<String, Facility__c> newFacilityMap = new Map<String, Facility__c>();
+			for (Facility__c f: facilityListById) {
+				newFacilityMap.put(f.FacilityNumber__c, f);
+			}
 
 			for (Patient p : patientList) {
 				insertedPatientList.add(
@@ -118,13 +69,78 @@ global with sharing class FacilityPatientHandler {
 			 			first_name__c = p.firstName,
 			 			last_name__c = p.lastName,
 			 			patient_id__c = stringGenerator(),
-			 			facility__c = facilityMap.get(p.facilityId).id
+			 			facility__c = newFacilityMap.get(p.facilityId).id
 			 		)
 				);
 			}
 			insert insertedPatientList;
+
+			List<String> responseList = new List<String>();
+			for (Patient__c p : insertedPatientList) {
+				//responseList.add(p.patient_id__c);
+				responseList.add(p.last_Name__c);
+			}
+
+			return 'Success: ' + responseList;
 		} catch (Exception e) {
-			System.debug('Exception: ' + e.getMessage());
+			System.debug('Exception: ' + e.getMessage() + ' Stacktrace: ' + e.getStackTraceString());
+			return 'Error: ' + e.getMessage();
 		}
+	}
+
+	private static String stringGenerator() {
+		Integer randomNumber = Integer.valueOf((Math.random() * 100));
+		List<String> alphabet = new List<String>{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+		String generatedFacilityNumber;
+
+		for (Integer i = 0; i < alphabet.size(); i++) {
+			generatedFacilityNumber += alphabet[Integer.valueOf((Math.random() * (alphabet.size() - 1)))];
+		}
+		return generatedFacilityNumber + ' ' + Integer.valueOf((Math.random() * 100));
+	}
+
+	private static void insertFacility(List<Patient> patientList, List<Facility__c> facilityList) {
+		System.debug('Darova Facility!');
+		Map<String, Facility__c> facilityMap = new Map<String, Facility__c>();
+		List<Facility__c> insertedFacilityList = new List<Facility__c>(); 
+
+		for (Facility__c f : facilityList) {
+				facilityMap.put(f.FacilityNumber__c, f);
+		}
+
+		for (Patient p : patientList) {
+			if (!facilityMap.containsKey(p.facilityId)) {
+				Facility__c f = new Facility__c (
+		 			Clinic_name__c = 'Some clinic name',
+					FacilityNumber__c = p.facilityId
+				);
+				insertedFacilityList.add(f);
+			}
+		}
+		insert insertedFacilityList;
+	}
+
+	private static void updatePatient(List<Patient> patientList, Map<String, Patient__c> currentPatientList, Map<String, Facility__c> facilityMap) {
+		List<Patient__c> customPatientList = new List<Patient__c>();
+		System.debug('Darova 1!');
+		for (Patient p : patientList) {
+			if (currentPatientList.containsKey(p.patientId)) {
+				Patient__c bufferObj = currentPatientList.get(p.patientId);
+				
+				if (facilityMap.get(p.facilityId).id != bufferObj.facility__c) {
+					bufferObj.facility__c = facilityMap.get(p.facilityId).id;
+				}
+
+				if (p.firstName != bufferObj.first_Name__c) {
+					bufferObj.first_Name__c = p.firstName;
+				}
+				
+				if (p.lastName != bufferObj.last_Name__c) {
+					bufferObj.last_Name__c = p.lastName;
+				}
+				customPatientList.add(bufferObj);
+			}
+		}
+		update customPatientList;
 	}
 }

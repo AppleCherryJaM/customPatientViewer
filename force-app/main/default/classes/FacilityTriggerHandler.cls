@@ -1,4 +1,7 @@
-public class FacilityTriggerHandler implements Database.Batchable<sObject>, Database.Stateful {
+public with sharing class FacilityTriggerHandler implements Database.Batchable<sObject>, Database.Stateful {
+    public FacilityTriggerHandler() {
+
+    }
     public Set<Id> patientList = new Set<Id>();
     public Id newFacilityId;
 
@@ -14,13 +17,23 @@ public class FacilityTriggerHandler implements Database.Batchable<sObject>, Data
     }
 
     public void execute(Database.BatchableContext bc, List<Patient__c> scope) {
-        List<Patient__c> updatedPatientList = new List<Patient__c>();
+        List<Id> idList = new List<Id>();
         for (Patient__c p : scope) {
-            p.facility__c = newFacilityId;
-            updatedPatientList.add(p);
+            idList.add(p.id);
         }
-        update updatedPatientList;
-    }   
+        try {
+             List<Patient__c> updatedPatientList = new List<Patient__c>();
+            for (Patient__c p : scope) {
+                p.facility__c = newFacilityId;
+                updatedPatientList.add(p);
+            }
+        update updatedPatientList;   
+        } catch (Exception e) {
+            MyLog__c l = new MyLog__c(body__c = 'Scope id: ' + idList + '\n Exception: ' + e.getMessage() + '\n StackTrace: ' + e.getStackTraceString());
+            insert l;
+            System.debug(l);
+        }
+    }
 
     public void finish (Database.BatchableContext bc) {
         System.debug('Batch is complete!');
