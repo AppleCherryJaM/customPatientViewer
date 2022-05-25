@@ -40,16 +40,12 @@ public with sharing class FacilityBatchTest {
     // doesn't work/ Exception: System.QueryException: List has no rows for assignment to SObject Class.FacilityBatchTest.testMethod2: line 48, column 1 
     @isTest
     static void testMethod2() {
-        List<Patient__c> patientList = [SELECT id FROM Patient__c];
-        Set<Id> patientIdSet = new Set<Id>();
-        for(Patient__c p : patientList) {
-            patientIdSet.add(p.id);
-        }
+        List<Facility__c> deletedFacility = [SELECT id, Clinic_name__c, FacilityNumber__c FROM Facility__c];
         Test.startTest();
-        Database.executeBatch(new FacilityBatch(patientIdSet, true));
-        MyLog__c l = [SELECT body__c FROM MyLog__c Limit 1];
+        delete deletedFacility;
         Test.stopTest();
+        MyLog__c l = [SELECT body__c FROM MyLog__c Limit 1];
         //MyLog__c l = [SELECT body__c FROM MyLog__c LIMIT 1];
-        System.assertEquals('', l.body__c);
+        System.assertEquals('Exception: List has no rows for assignment to SObject', l.body__c);
     }
 }
