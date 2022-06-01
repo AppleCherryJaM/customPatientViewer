@@ -1,12 +1,12 @@
 import { LightningElement, track } from 'lwc';
 import getFacilities from '@salesforce/apex/PatientComponentController.getFacilities';
 import getPatientList from '@salesforce/apex/PatientComponentController.getPatientList';
-import ContactMobile from '@salesforce/schema/Case.ContactMobile';
+
 
 const columns = [
     { label: 'id', fieldName: 'id' },
-    { label: 'firstName', fieldName: 'first name' },
-    { label: 'lastName', fieldName: 'last name' }
+    { label: 'First Name', fieldName: 'firstName' },
+    { label: 'Last Name', fieldName: 'lastName' }
 ];
 
 export default class PatientViewer extends LightningElement {
@@ -16,35 +16,36 @@ export default class PatientViewer extends LightningElement {
     facilities = [];
     patients = [];
 
+
+
     connectedCallback() {
+        this.getFacilityList();
+    }
+
+    getFacilityList() {
         getFacilities()
             .then(res => {
-                this.error = undefined;
-                console.log(res);
+                console.log('RESULT: ' + res);
                 this.facilities = JSON.parse(res);
             })
             .catch(err => {
-                this.facilities = undefined;
-                this.error = err;
-                console.log(err);
+                console.log('ERROR 1: ', err);
             })
     }
 
-    connectedCallback() {
-        getPatientList(this.facilityValue.toString)
+    getPatients(facilityId) {
+        getPatientList(facilityId)
             .then(res => {
-                this.error = undefined;
-                console.log(res);
                 this.patients = JSON.parse(res);
+                console.log('PATIENTS: ', this.patients);
             })
             .catch(err => {
-                this.patients = undefined;
-                this.error = err;
-                console.log(err);
-            });
+                console.log('ERROR 2: ', err);
+            })
     }
 
     handleChange(event) {
         this.facilityValue = event.detail.value;
+        getPatients(event.detail.value.toString());
     }
 }
