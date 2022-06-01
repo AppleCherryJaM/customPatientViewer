@@ -1,0 +1,15 @@
+<template>
+    <lightning-combobox
+		 name="facility"
+		 label="facility"
+		 placeholder="Select Facility"
+		 options={facilities}
+		 onchange={handleChange}
+		 required
+		 ></lightning-combobox>
+
+		 <lightning-datatable 
+		 		key-field="id"
+				data={patients}
+				columns={columns}></lightning-datatable>
+</template>
