@@ -4,14 +4,14 @@ import getPatientList from '@salesforce/apex/PatientComponentController.getPatie
 
 
 const columns = [
-    { label: 'id', fieldName: 'id' },
+    { label: 'id', fieldName: 'patientId' },
     { label: 'First Name', fieldName: 'firstName' },
     { label: 'Last Name', fieldName: 'lastName' }
 ];
 
 export default class PatientViewer extends LightningElement {
     @track error;
-    facilityValue = 1;
+    facilityValue = "a047Q000002khQKQAY";
     columns = columns;
     facilities = [];
     patients = [];
@@ -46,6 +46,6 @@ export default class PatientViewer extends LightningElement {
 
     handleChange(event) {
         this.facilityValue = event.detail.value;
-        getPatients(event.detail.value.toString());
+        getPatients(this.facilityValue);
     }
 }
