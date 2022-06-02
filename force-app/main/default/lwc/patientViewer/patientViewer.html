@@ -1,15 +1,31 @@
 <template>
-    <lightning-combobox
-		 name="facility"
-		 label="facility"
-		 placeholder="Select Facility"
-		 options={facilities}
-		 onchange={handleChange}
-		 required
-		 ></lightning-combobox>
-
+	<div class="slds-page-header">
+		<div class="slds-page-header__row">
+			<div class="slds-page-header__col-title">
+				<div class="slds-media">
+					<div class="slds-media__body">
+						<div class="slds-page-header__name">
+							<div class="slds-page-header__name-title">
+									<span class="slds-page-header__title slds-truncate" title={header}>{header}</span>
+							</div>
+						</div>
+						<lightning-combobox
+		 					name="facility"
+		 					label="Facility"
+		 					placeholder="Select Facility"
+		 					options={facilities}
+		 					onchange={handleChange}
+		 					required
+						></lightning-combobox>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 		 <lightning-datatable 
 		 		key-field="id"
 				data={patients}
-				columns={columns}></lightning-datatable>
+				columns={columns}
+				hide-checkbox-column="true"
+				></lightning-datatable>
 </template>

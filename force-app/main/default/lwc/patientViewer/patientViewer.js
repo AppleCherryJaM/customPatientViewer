@@ -3,20 +3,33 @@ import getFacilities from '@salesforce/apex/PatientComponentController.getFacili
 import getPatientList from '@salesforce/apex/PatientComponentController.getPatientList';
 
 
-const columns = [
-    { label: 'id', fieldName: 'patientId' },
-    { label: 'First Name', fieldName: 'firstName' },
-    { label: 'Last Name', fieldName: 'lastName' }
+const COLUMNS = [{
+        label: 'First Name',
+        fieldName: 'firstName',
+        cellAttributes: {
+            class: 'slds-box slds-theme_shade',
+            alignment: 'center'
+        }
+    },
+    {
+        label: 'Last Name',
+        fieldName: 'lastName',
+        cellAttributes: {
+            class: 'slds-box slds-theme_shade',
+            alignment: 'center'
+        }
+    }
 ];
+
+const componentHeader = 'Patient viewer';
 
 export default class PatientViewer extends LightningElement {
     @track error;
     facilityValue = "a047Q000002khQKQAY";
-    columns = columns;
+    columns = COLUMNS;
     facilities = [];
     patients = [];
-
-
+    header = componentHeader;
 
     connectedCallback() {
         this.getFacilityList();
@@ -33,8 +46,8 @@ export default class PatientViewer extends LightningElement {
             })
     }
 
-    getPatients(facilityId) {
-        getPatientList(facilityId)
+    getPatients() {
+        getPatientList({ currentFacility: this.facilityValue })
             .then(res => {
                 this.patients = JSON.parse(res);
                 console.log('PATIENTS: ', this.patients);
@@ -46,6 +59,7 @@ export default class PatientViewer extends LightningElement {
 
     handleChange(event) {
         this.facilityValue = event.detail.value;
-        getPatients(this.facilityValue);
+        console.log(this.facilityValue);
+        this.getPatients();
     }
 }
