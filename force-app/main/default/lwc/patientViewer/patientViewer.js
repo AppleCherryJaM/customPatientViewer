@@ -2,7 +2,6 @@ import { LightningElement, track } from 'lwc';
 import getFacilities from '@salesforce/apex/PatientComponentController.getFacilities';
 import getPatientList from '@salesforce/apex/PatientComponentController.getPatientList';
 
-
 const COLUMNS = [{
         label: 'First Name',
         fieldName: 'firstName',
@@ -21,15 +20,14 @@ const COLUMNS = [{
     }
 ];
 
-const componentHeader = 'Patient viewer';
+const COMPONENT_HEADER = 'Patient viewer';
 
 export default class PatientViewer extends LightningElement {
-    @track error;
-    facilityValue = "a047Q000002khQKQAY";
+    facilityValue;
     columns = COLUMNS;
     facilities = [];
     patients = [];
-    header = componentHeader;
+    header = COMPONENT_HEADER;
 
     connectedCallback() {
         this.getFacilityList();
@@ -38,8 +36,9 @@ export default class PatientViewer extends LightningElement {
     getFacilityList() {
         getFacilities()
             .then(res => {
-                console.log('RESULT: ' + res);
-                this.facilities = JSON.parse(res);
+                if (res.isSuccess) {
+                    this.facilities = res.data;
+                }
             })
             .catch(err => {
                 console.log('ERROR 1: ', err);
@@ -49,8 +48,9 @@ export default class PatientViewer extends LightningElement {
     getPatients() {
         getPatientList({ currentFacility: this.facilityValue })
             .then(res => {
-                this.patients = JSON.parse(res);
-                console.log('PATIENTS: ', this.patients);
+                if (res.isSuccess) {
+                    this.patients = res.data;
+                }
             })
             .catch(err => {
                 console.log('ERROR 2: ', err);
@@ -59,7 +59,6 @@ export default class PatientViewer extends LightningElement {
 
     handleChange(event) {
         this.facilityValue = event.detail.value;
-        console.log(this.facilityValue);
         this.getPatients();
     }
 }
