@@ -21,13 +21,10 @@
         helper.getFacilities(cmp);
     },
 
-    patientListEditor: function(cmp, event, helper) {
-        // var heresy = cmp.get("v.isComboboxSelected");
-        var smth = cmp.get("v.patientList");
-        if (smth) {
-            helper.getPatients(cmp, heresy);
-        }
-        console.log("AAAAA!");
-        console.log(cmp.get("v.patientList"));
+    handleComponentEvent: function(cmp, event, helper) {
+        var value = event.getParam("message");
+        console.log("VALUE: ", value);
+        helper.getPatients(cmp, value);
+        cmp.set("v.isComboboxSelected", true);
     }
 })

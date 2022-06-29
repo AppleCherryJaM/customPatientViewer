@@ -7,20 +7,23 @@
     <aura:attribute name="columns" type="List" />
     <aura:attribute name="chosenValue" type="String" />
 
+    <aura:method name="patientListEditor" action="{!c.patientListEditor}" access="global" description="Sample method with parameters"></aura:method>
+
     <aura:handler name="init" value="{!this}" action="{!c.onInit}" />
+    <aura:handler name="cmpEvent" event="c:AppEvent" action="{!c.handleComponentEvent}" />
+
     <div class="slds-page-header">
         <div class="slds-page-header__row">
             <div class="slds-page-header__col-title">
                 <div class="slds-media">
                     <div class="slds-media__body">
-                        <c:FacilityComboboxComponent aura:id="facility" chosenValue="{!v.chosenValue}" isChosen="{!v.isComboboxSelected}" options="{!v.options}" />
+                        <c:FacilityComboboxComponent aura:id="facility" options="{!v.options}" />
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- <aura:method name="patientListEditor" action="{!c.patientListEditor}" access="public" description="Sample method with parameters"></aura:method> -->
     <aura:if isTrue="{! v.isComboboxSelected }">
-        <c:DatatableComponent aura:id="patientDatatable" chosenValue="{!v.chosenValue}" columns="{! v.columns }" patientList="{! v.patientList }" />
+        <c:DatatableComponent aura:id="patientDatatable" columns="{! v.columns }" patientList="{! v.patientList }" />
     </aura:if>
 </aura:component>
