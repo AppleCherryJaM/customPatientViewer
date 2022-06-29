@@ -18,11 +18,16 @@
             }
         ];
         cmp.set("v.columns", columns);
-        //helper.getFacilities(cmp);
+        helper.getFacilities(cmp);
     },
 
-    onComboboxChangeListener: function(cmp, event, helper) {
-        helper.getPatients(cmp, event.getParam("value"));
-        cmp.set("v.isComboboxSelected", true);
+    patientListEditor: function(cmp, event, helper) {
+        // var heresy = cmp.get("v.isComboboxSelected");
+        var smth = cmp.get("v.patientList");
+        if (smth) {
+            helper.getPatients(cmp, heresy);
+        }
+        console.log("AAAAA!");
+        console.log(cmp.get("v.patientList"));
     }
 })

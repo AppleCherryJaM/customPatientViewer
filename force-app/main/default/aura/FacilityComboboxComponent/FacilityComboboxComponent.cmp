@@ -3,7 +3,7 @@
     <aura:attribute name="chosenValue" type="String" />
     <aura:attribute name="isChosen" type="Boolean" />
 
-    <aura:handler name="init" value="{!this}" action="{!c.onInit}" />
+    <!-- <aura:handler name="init" value="{!this}" action="{!c.onInit}" /> -->
     <lightning:combobox name="general" label="Facilities" placeholder="Select Facility" options="{! v.options }" onchange="{! c.onComboboxChangeListener }" />
 
 </aura:component>

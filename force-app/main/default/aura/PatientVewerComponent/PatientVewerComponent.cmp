@@ -13,13 +13,14 @@
             <div class="slds-page-header__col-title">
                 <div class="slds-media">
                     <div class="slds-media__body">
-                        <c:FacilityComboboxComponent aura:id="facility" chosenValue="{!v.chosenValue}" isChosen="{!v.isComboboxSelected}" />
+                        <c:FacilityComboboxComponent aura:id="facility" chosenValue="{!v.chosenValue}" isChosen="{!v.isComboboxSelected}" options="{!v.options}" />
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <!-- <aura:method name="patientListEditor" action="{!c.patientListEditor}" access="public" description="Sample method with parameters"></aura:method> -->
     <aura:if isTrue="{! v.isComboboxSelected }">
-        <c:DatatableComponent aura:id="patientDatatable" chosenValue="{!v.chosenValue}" columns="{! v.columns }" />
+        <c:DatatableComponent aura:id="patientDatatable" chosenValue="{!v.chosenValue}" columns="{! v.columns }" patientList="{! v.patientList }" />
     </aura:if>
 </aura:component>
