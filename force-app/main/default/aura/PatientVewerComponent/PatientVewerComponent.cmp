@@ -10,14 +10,14 @@
     <aura:method name="patientListEditor" action="{!c.patientListEditor}" access="global" description="Sample method with parameters"></aura:method>
 
     <aura:handler name="init" value="{!this}" action="{!c.onInit}" />
-    <aura:handler name="cmpEvent" event="c:AppEvent" action="{!c.handleComponentEvent}" />
+    <aura:handler event="c:AppEvent" action="{! c.handleComponentEvent }" />
 
     <div class="slds-page-header">
         <div class="slds-page-header__row">
             <div class="slds-page-header__col-title">
                 <div class="slds-media">
                     <div class="slds-media__body">
-                        <c:FacilityComboboxComponent aura:id="facility" options="{!v.options}" />
+                        <c:FacilityComboboxComponent aura:id="facility" options="{! v.options }" isChosen="{! v.isComboboxSelected }" />
                     </div>
                 </div>
             </div>

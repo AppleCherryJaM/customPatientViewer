@@ -23,7 +23,6 @@
 
     handleComponentEvent: function(cmp, event, helper) {
         var value = event.getParam("message");
-        console.log("VALUE: ", value);
         helper.getPatients(cmp, value);
         cmp.set("v.isComboboxSelected", true);
     }
