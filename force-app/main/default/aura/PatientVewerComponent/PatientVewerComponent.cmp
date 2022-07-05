@@ -5,6 +5,7 @@
     <aura:attribute name="options" type="List" default="[]" />
     <aura:attribute name="isComboboxSelected" type="Boolean" default="false" />
     <aura:attribute name="columns" type="List" />
+    <aura:attribute name="homePageLabel" type="String" default="{! $Label.c.Custom_viewer }" />
     <aura:attribute name="chosenValue" type="String" />
 
     <aura:method name="patientListEditor" action="{!c.patientListEditor}" access="global" description="Sample method with parameters"></aura:method>
@@ -17,6 +18,11 @@
             <div class="slds-page-header__col-title">
                 <div class="slds-media">
                     <div class="slds-media__body">
+                        <div class="slds-page-header__name">
+                            <div class="slds-page-header__name-title">
+                                <p class="slds-page-header__title slds-truncate">{! v.homePageLabel }</p>
+                            </div>
+                        </div>
                         <c:FacilityComboboxComponent aura:id="facility" options="{! v.options }" isChosen="{! v.isComboboxSelected }" />
                     </div>
                 </div>

@@ -1,6 +1,20 @@
 <aura:component controller="PatientComponentController">
     <aura:attribute name="columns" type="List" default="[]" />
     <aura:attribute name="patientList" type="List" default="[]" />
+    <aura:attribute name="data" type="List" default="[]" />
+    <aura:attribute name="isLoading" type="Boolean" default="false" />
+    <aura:attribute name="dataTableSchema" type="Object" />
+    <aura:attribute name="initialRows" type="Integer" default="5" />
+    <aura:attribute name="selectedRowsCount" type="Integer" default="0" />
+    <aura:attribute name="enableInfiniteLoading" type="Boolean" default="true" />
+    <aura:attribute name="rowsToLoad" type="Integer" default="4" />
+    <aura:attribute name="loadMoreOffset" type="Integer" default="20" />
+    <aura:attribute name="totalNumberOfRows" type="Integer" default="300" />
+    <aura:attribute name="loadMoreStatus" type="String" default="" />
 
-    <lightning:datatable keyField="id" data="{! v.patientList }" columns="{! v.columns }" hideCheckboxColumn="true"></lightning:datatable>
+
+    <!-- <aura:handler name="init" value="{!this}" action="{!c.onInit}" /> -->
+
+    <lightning:datatable keyField="id" data="{! v.patientList }" columns="{! v.columns }" hideCheckboxColumn="true" showRowNumberColumn="true" enableInfiniteLoading="{! v.enableInfiniteLoading }" onloadmore="{! c.loadMoreData }">
+    </lightning:datatable>
 </aura:component>

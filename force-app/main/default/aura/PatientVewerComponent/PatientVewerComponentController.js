@@ -2,17 +2,26 @@
     onInit: function(cmp, event, helper) {
         var columns = [{
                 label: 'First Name',
-                fieldName: 'firstName',
+                fieldName: 'linkName',
+                type: 'url',
+                typeAttributes: {
+                    label: { fieldName: 'firstName' },
+                    target: '_blank'
+                },
                 cellAttributes: {
-                    class: 'slds-box slds-theme_shade',
+                    class: 'slds-box',
                     alignment: 'center'
                 }
             },
             {
                 label: 'Last Name',
                 fieldName: 'lastName',
+                typeAttributes: {
+                    label: { fieldName: 'lastName' },
+                    target: '_blank'
+                },
                 cellAttributes: {
-                    class: 'slds-box slds-theme_shade',
+                    class: 'slds-box',
                     alignment: 'center'
                 }
             }
