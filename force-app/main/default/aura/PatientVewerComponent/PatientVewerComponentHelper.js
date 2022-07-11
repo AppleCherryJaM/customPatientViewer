@@ -1,4 +1,22 @@
 ({
+    getColumns: function(cmp) {
+        var columnList = [];
+        var action = cmp.get("c.getColumns");
+        action.setCallback(this, function(res) {
+            if (res.getState() === "SUCCESS") {
+                if (res.getReturnValue().isSuccess) {
+                    for (var column of res.getReturnValue().data) {
+                        columnList.push(column);
+                    }
+                    cmp.set("v.columns", columnList);
+                } else {
+                    console.log("ERROR: Error in getColumns() method!");
+                }
+            }
+        });
+        $A.enqueueAction(action);
+    },
+
     getFacilities: function(cmp) {
         var facilityList = [];
         var action = cmp.get("c.getFacilities");
@@ -38,6 +56,23 @@
                         record.linkName = 'https://datatest3-dev-ed.lightning.force.com/lightning/r/Patient__c/' + record.id + '/view';
                     });
                     cmp.set("v.patientList", editedPatients);
+
+                    var data = [];
+                    var storage = [];
+
+                    if (editedPatients.length > 3) {
+                        for (let i = 0; i < editedPatients.length; i++) {
+                            if (i < editedPatients.length / 2) {
+                                data.push(editedPatients[i]);
+                            } else {
+                                storage.push(editedPatients[i]);
+                            }
+                        }
+                    } else {
+                        data = editedPatients;
+                    }
+                    cmp.set("v.data", data);
+                    cmp.set("v.storage", storage);
                 }
             } else {
                 console.log('Error msg');
